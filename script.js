@@ -1,4 +1,4 @@
-const SECRET_WORDS = ['надгора', 'над гора', '1','0.3 0.4'];
+const SECRET_WORDS = ['надгора', 'над гора', '1', '0.3 0.4'];
 const PORTRAIT_URL = 'love2.jpg';
 const DATES = [
   '1 грудня вт',
@@ -226,16 +226,30 @@ function initHeartPortrait() {
   const counterEl = document.getElementById('heartCounter');
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  counterEl.textContent = 'натискай...';
+  counterEl.textContent = 'завантажую фото...';
 
   const img = new Image();
+  img.decoding = 'async';
   img.src = PORTRAIT_URL;
 
-  img.onload = () => {
+  img.onerror = () => {
+    counterEl.textContent = 'Не вдалося завантажити фото';
+  };
+
+  img.onload = async () => {
+    try {
+      if (img.decode) {
+        await img.decode();
+      }
+    } catch (_) {}
+
     const off = document.createElement('canvas');
     off.width = canvas.width;
     off.height = canvas.height;
-    const octx = off.getContext('2d');
+    const octx = off.getContext('2d', { willReadFrequently: true });
+
+    octx.fillStyle = '#000';
+    octx.fillRect(0, 0, off.width, off.height);
 
     const imgRatio = img.width / img.height;
     const boxRatio = off.width / off.height;
@@ -255,12 +269,12 @@ function initHeartPortrait() {
     octx.drawImage(img, drawX, drawY, drawW, drawH);
     const data = octx.getImageData(0, 0, off.width, off.height).data;
 
-    const step = 2.5;
+    const step = 3;
     const points = [];
     for (let y = step; y < off.height; y += step) {
       for (let x = step; x < off.width; x += step) {
-        const px = Math.floor(x);
-        const py = Math.floor(y);
+        const px = Math.min(off.width - 1, Math.floor(x));
+        const py = Math.min(off.height - 1, Math.floor(y));
         const idx = (py * off.width + px) * 4;
         const brightness = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
         points.push({ x, y, b: brightness });
@@ -273,6 +287,9 @@ function initHeartPortrait() {
 
     let revealed = 0;
     const total = points.length;
+    ctx.font = '4px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
     function drawBatch() {
       if (revealed >= total) {
@@ -284,10 +301,9 @@ function initHeartPortrait() {
         const p = points[revealed];
         let norm = p.b / 255;
         norm = norm < 0.5 ? 2 * norm * norm : 1 - Math.pow(-2 * norm + 2, 2) / 2;
-        const alpha = Math.min(0.98, Math.max(0.06, norm));
+        const alpha = Math.min(1, Math.max(0.12, norm));
 
-        ctx.fillStyle = `rgba(248, 175, 188, ${alpha})`;
-        ctx.font = '3px sans-serif';
+        ctx.fillStyle = `rgba(248, 175, 188, ${alpha.toFixed(3)})`;
         ctx.fillText('♥', p.x, p.y);
       }
       counterEl.textContent = revealed;
@@ -301,6 +317,7 @@ function initHeartPortrait() {
       drawBatch();
     };
     document.getElementById('canvasBox').onclick = start;
+    counterEl.textContent = 'натискай...';
     setTimeout(start, 800);
   };
 }
