@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Тобі емоція</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- ЕКРАН 1: КОДОВЕ СЛОВО -->
+    <section id="screen-1" class="screen active">
+      <h1 style="font-size: 28px;">Ця емоція закрита словом</h1>
+      <p class="subtitle">місце, де ми вперше провели разом час</p>
+      <input id="secretInput" class="pill-input" type="text" placeholder="слово" autocomplete="off" />
+      <button id="unlockBtn" class="pill-btn">Відкрити</button>
+    </section>
+
+    <!-- ЕКРАН 2: КОНВЕРТ -->
+    <section id="screen-2" class="screen">
+      <div id="introText" class="intro-text">Сонечко,<br>тобі лист</div>
+      <div id="envelopeWrap" class="envelope-wrapper">
+        <div id="envelope" class="envelope">
+          <div class="wax-seal">🤍</div>
+        </div>
+        <p id="envelopeHint" class="subtitle" style="margin-top: 18px;">відкрий </p>
+      </div>
+    </section>
+
+    <!-- ЕКРАН 3: ТЕКСТ ЛИСТА -->
+    <section id="screen-3" class="screen">
+      <div class="letter-card">
+        <div class="salutation">Просто так, для моєї киці</div>
+        <h2>ДЛЯ КОХАННЯ НЕ ПОТРІБЕН ПРИВІД</h2>
+        <p>Сонечко,<br>Сьогодні в календарі немає жодної особливої дати. Звичайний день, звичайні справи.</p>
+        <p>Але мені захотілося нагадати тобі дещо важливе, не чекаючи свят чи гучних подій.</p>
+        <p>Ти робиш моє життя набагато світлішим просто тим, що ти в ньому є. Твоя усмішка, твій голос і кожна наша спільна мить — це найкраще, що зі мною траплялося.</p>
+        <p>Поруч із тобою навіть найзвичайніший вечір стає теплим і особливим, а будь-які проблеми здаються дрібницями. Ти — мій спокій, моє натхнення і моя найбільша радість.</p>
+        <p>Просто знай, що я дуже сильно тебе люблю І сьогодні, і завтра, і завжди.</p>
+        <p>Дякую, що ти поруч. Обіймаю тебе міцно-міцно і ніжно ніжно цілую</p>
+        <div class="salutation">наше перше спільне фото</div>
+
+        <div class="polaroid">
+          <img src="love.jpg" alt="Ми" />
+          <span>ну ми))</span>
+        </div>
+        <div class="signature">твій котик </div>
+      </div>
+      <button class="pill-btn" onclick="goToScreen(4)">Відкрити</button>
+    </section>
+
+    <!-- ЕКРАН 4: ВИБІР СЦЕНАРІЮ -->
+    <section id="screen-4" class="screen">
+      <h1 style="font-size: 28px;">Що будемо робити?</h1>
+      <div class="options-list">
+        <div class="option-card" onclick="selectPlan(this, '🎬 Підемо в кіно', 'яке побажаєш')">
+          <div class="option-icon">🎬</div>
+          <div>
+            <div class="option-title">Підемо в кіно</div>
+            <div class="option-desc">яке побажаєш</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectPlan(this, '🍽️ Вечеря, де ти давно хотіла', 'стіл на двох, увечері')">
+          <div class="option-icon">🍽️</div>
+          <div>
+            <div class="option-title">Вечеря, де ти давно хотіла</div>
+            <div class="option-desc">стіл на двох, увечері</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectPlan(this, '🌙 Вечірня прогулянка містом', 'кава, і прогулянка теплим вечірнім містом')">
+          <div class="option-icon">🌙</div>
+          <div>
+            <div class="option-title">Вечірня прогулянка містом</div>
+            <div class="option-desc">кава, і прогулянка теплим вечірнім містом</div>
+          </div>
+        </div>
+        <div class="option-card" onclick="selectPlan(this, '🏠 Нікуди не підемо', 'вдома, удвох, і телефон вимкнемо')">
+          <div class="option-icon">🏠</div>
+          <div>
+            <div class="option-title">Нікуди не підемо</div>
+            <div class="option-desc">вдома, удвох, і телефон вимкнемо</div>
+          </div>
+        </div>
+
+        <!-- НОВИЙ ПУНКТ: СВОЯ ІДЕЯ -->
+        <div id="customPlanCard" class="option-card" style="flex-direction: column; align-items: stretch; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div class="option-icon">✍️</div>
+            <div>
+              <div class="option-title">Запропонувати свою ідею</div>
+              <div class="option-desc">напиши, куди хочеш піти або що зробити</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px; width: 100%;">
+            <input
+              id="customPlanInput"
+              type="text"
+              placeholder="наприклад: на батути чи за місто..."
+              autocomplete="off"
+              style="flex: 1; height: 40px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); color: #fff; padding: 0 14px; font-size: 13.5px; outline: none;"
+            />
+            <button
+              type="button"
+              onclick="submitCustomPlan()"
+              style="height: 40px; padding: 0 16px; border-radius: 999px; border: none; background: #f3a6b2; color: #38161c; font-weight: 600; font-size: 13px; cursor: pointer; flex-shrink: 0;"
+            >
+              Обрати
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЕКРАН 5: КОЛИ І О КОТРІЙ -->
+    <section id="screen-5" class="screen">
+      <h1 id="pickerTitle" style="font-size: 30px;">Коли?</h1>
+      <div class="picker-container">
+        <div class="picker-highlight"></div>
+        <div id="pickerList" class="picker-list"></div>
+      </div>
+      <button id="pickerBtn" class="pill-btn">Далі</button>
+    </section>
+
+    <!-- ЕКРАН 6: ПОРТРЕТ ІЗ СЕРДЕЧОК ТА ПІДСУМОК -->
+    <section id="screen-6" class="screen">
+      <div class="heart-canvas-box" id="canvasBox">
+        <canvas id="heartCanvas" width="270" height="290"></canvas>
+      </div>
+      <div id="heartCounter" class="heart-counter">натискай...</div>
+
+      <div class="summary-box">
+        <div class="label">Збираюсь</div>
+        <div id="finalPlan" class="choice"></div>
+        <div id="finalDateTime" class="datetime"></div>
+        <div id="finalSub" class="option-desc" style="margin-top: 4px;"></div>
+      </div>
+
+      <button class="pill-btn" onclick="shareResult()">Поділитися</button>
+      <button class="pill-btn secondary" onclick="alert('Збережено в сердечку 🤍')">Зберегти собі</button>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
